@@ -23,6 +23,9 @@ doctrine:
         auto_generate_proxy_classes: %kernel.debug%
         auto_mapping: true
 
+assetic:
+    use_controller: false
+
 security:
     providers:
         memory:
