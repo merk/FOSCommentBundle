@@ -14,10 +14,10 @@ before_script:
   - for file in `find /home/vagrant/.phpenv -name 'xdebug.ini'`; do echo "xdebug.max_nesting_level=200" >> $file; done;
   - php-cgi -b 127.0.0.1:9000 &
   - ./Tests/Functional/app/console assets:install --symlink Tests/Functional/web > /dev/null && ./Tests/Functional/app/console doctrine:database:drop --force > /dev/null && ./Tests/Functional/app/console doctrine:database:create > /dev/null && ./Tests/Functional/app/console doctrine:schema:create
+  - curl http://localhost:8080/async/test
 
 script: ./run_tests.sh
 
 notifications:
   email:
-    - friendsofsymfony-dev@googlegroups.com
     - tim+build@nagel.com.au
