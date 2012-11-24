@@ -1,3 +1,8 @@
+2.0.x to 3.0.0
+
+ * Thread identifiers are now specified by adding a `data-thread-id=""` attribute
+   to the thread container. The old method is deprecated and will be removed in 3.0.
+
 2.0.2 to 2.0.3
 
  * A recent change to FOSRestBundle now means that JMSSerializerBundle needs to
@@ -102,4 +107,4 @@
    implement an appropriate class from Entity/ or Document/ for your application
    and adjust your configuration accordingly.
 
-[some events]: https://github.com/FriendsOfSymfony/FOSCommentBundle/blob/master/Resources/doc/13-hooking-into-the-js-code.md
+[some events]: https://github.com/FriendsOfSymfony/FOSCommentBundle/blob/master/Resources/doc/13-hooking_into_the_js_code.md
