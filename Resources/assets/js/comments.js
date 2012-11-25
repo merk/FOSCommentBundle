@@ -348,7 +348,7 @@
                 // Using the primary new comment form, reset it to a
                 // raw state
                 form = $(form[0]);
-                form[0].reset();
+                form.reset();
                 form.children('.fos_comment_form_errors').remove();
             }
 
