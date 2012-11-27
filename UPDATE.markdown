@@ -6,6 +6,10 @@
    one of the two POSITION_ constants provided in the interface.
  * Minor changes to the templates to facilitate different sorting orders in
    javascript.
+ * Removed fos_comment_comment_replies class in favour of
+   fos_comment_comments which also encapsulates the entire comment tree
+ * Removed the fos_comment_comment_depth_N class in favour of a
+   data-depth attribute.
 
 2.0.2 to 2.0.3
 
