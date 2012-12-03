@@ -1,15 +1,21 @@
 2.0.x to 3.0.0
 
  * Thread identifiers are now specified by adding a `data-thread-id=""` attribute
-   to the thread container. The old method is deprecated and will be removed in 3.0.
- * Introduced a new method to SortingInterface, `getNewPosition` which should return
-   one of the two POSITION_ constants provided in the interface.
+   to the thread container. The old method is deprecated and will be removed in
+   3.0.
+ * Introduced a new method to SortingInterface, `getNewPosition` which should
+   return one of the two POSITION_ constants provided in the interface.
  * Minor changes to the templates to facilitate different sorting orders in
    javascript.
- * Removed fos_comment_comment_replies class in favour of
-   fos_comment_comments which also encapsulates the entire comment tree
- * Removed the fos_comment_comment_depth_N class in favour of a
-   data-depth attribute.
+ * There have been many modifications to templates supplied.
+ * Removed fos_comment_comment_replies class in favour of fos_comment_comments.
+   which also encapsulates the entire comment tree.
+ * Removed the fos_comment_comment_depth_N class in favour of a data-depth
+   attribute.
+ * The .fos_comment_replying class is now applied to the root comment object
+   instead of the replying dom element.
+ * Added multiple twig variables to allow setting button classes without
+   overriding entire blocks to add a class.
 
 2.0.2 to 2.0.3
 

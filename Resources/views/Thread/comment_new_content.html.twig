@@ -44,9 +44,9 @@
                 <div class="fos_comment_submit">
                     {% block fos_comment_form_submit %}
                         {% if parent is not null %}
-                            <input type="button" value="{% trans from 'FOSCommentBundle' %}fos_comment_comment_reply_cancel{% endtrans %}" class="fos_comment_comment_reply_cancel" />
+                            <input type="button" value="{% trans from 'FOSCommentBundle' %}fos_comment_comment_reply_cancel{% endtrans %}" class="fos_comment_comment_reply_cancel{{ fos_comment_reply_cancel_class | default('') }}" />
                         {% endif %}
-                        <input type="submit" value="{% trans from 'FOSCommentBundle' %}fos_comment_comment_new_submit{% endtrans %}" />
+                        <input type="submit" value="{% trans from 'FOSCommentBundle' %}fos_comment_comment_new_submit{% endtrans %}" {% if fos_comment_reply_submit_class | default('') %}class="{{ fos_comment_reply_submit_class }}" {% endif %}/>
                     {% endblock %}
                 </div>
 

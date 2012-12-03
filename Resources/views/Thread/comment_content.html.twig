@@ -9,6 +9,9 @@
 
 #}
 
+{% set view = view|default('tree') %}
+{% set depth = depth|default(0) %}
+
 {% block fos_comment_comment %}
 <div id="fos_comment_{{ comment.id }}" class="fos_comment_comment_group fos_comment_comment_show" data-depth="{{ depth }}" {% if parentId is defined %}data-parent="{{ parentId }}"{% endif %}>
     <div class="fos_comment_comment_metas">
@@ -26,7 +29,7 @@
 
             {% block fos_comment_comment_metas_edit %}
                 {% if fos_comment_can_edit_comment(comment) %}
-                <button data-url="{{ url("fos_comment_edit_thread_comment", {"id": comment.thread.id, "commentId": comment.id}) }}" class="fos_comment_comment_edit_show_form">{% trans from 'FOSCommentBundle' %}fos_comment_comment_edit{% endtrans %}</button>
+                <button data-url="{{ url("fos_comment_edit_thread_comment", {"id": comment.thread.id, "commentId": comment.id}) }}" class="fos_comment_comment_edit_show_form{{ fos_comment_edit_class | default('') }}">{% trans from 'FOSCommentBundle' %}fos_comment_comment_edit{% endtrans %}</button>
                 {% endif %}
             {% endblock fos_comment_comment_metas_edit %}
 
@@ -34,10 +37,10 @@
                 {% if fos_comment_can_delete_comment(comment) %}
                     {% if comment is fos_comment_in_state(constant('FOS\\CommentBundle\\Model\\CommentInterface::STATE_DELETED')) %}
                         {# undelete #}
-                        <button data-url="{{ url("fos_comment_remove_thread_comment", {"id": comment.thread.id, "commentId": comment.id, "value": constant('FOS\\CommentBundle\\Model\\CommentInterface::STATE_VISIBLE') }) }}" class="fos_comment_comment_remove">{% trans from 'FOSCommentBundle' %}fos_comment_comment_undelete{% endtrans %}</button>
+                        <button data-url="{{ url("fos_comment_remove_thread_comment", {"id": comment.thread.id, "commentId": comment.id, "value": constant('FOS\\CommentBundle\\Model\\CommentInterface::STATE_VISIBLE') }) }}" class="fos_comment_comment_remove{{ fos_comment_undelete_class | default('') }}">{% trans from 'FOSCommentBundle' %}fos_comment_comment_undelete{% endtrans %}</button>
                     {% else %}
                         {# delete #}
-                        <button data-url="{{ url("fos_comment_remove_thread_comment", {"id": comment.thread.id, "commentId": comment.id, "value":  constant('FOS\\CommentBundle\\Model\\CommentInterface::STATE_DELETED')}) }}" class="fos_comment_comment_remove">{% trans from 'FOSCommentBundle' %}fos_comment_comment_delete{% endtrans %}</button>
+                        <button data-url="{{ url("fos_comment_remove_thread_comment", {"id": comment.thread.id, "commentId": comment.id, "value":  constant('FOS\\CommentBundle\\Model\\CommentInterface::STATE_DELETED')}) }}" class="fos_comment_comment_remove{{ fos_comment_delete_class | default('') }}">{% trans from 'FOSCommentBundle' %}fos_comment_comment_delete{% endtrans %}</button>
                     {% endif %}
                 {% endif %}
             {% endblock fos_comment_comment_metas_delete %}
@@ -45,8 +48,8 @@
             {% block fos_comment_comment_metas_voting %}
                 {% if fos_comment_can_vote(comment) %}
                     <div class="fos_comment_comment_voting">
-                        <button data-url="{{ url("fos_comment_new_thread_comment_votes", {"id": comment.thread.id, "commentId": comment.id, "value": 1}) }}" class="fos_comment_comment_vote">{% trans from 'FOSCommentBundle' %}fos_comment_comment_show_voteup{% endtrans %}</button>
-                        <button data-url="{{ url("fos_comment_new_thread_comment_votes", {"id": comment.thread.id, "commentId": comment.id, "value": -1}) }}" class="fos_comment_comment_vote">{% trans from 'FOSCommentBundle' %}fos_comment_comment_show_votedown{% endtrans %}</button>
+                        <button data-url="{{ url("fos_comment_new_thread_comment_votes", {"id": comment.thread.id, "commentId": comment.id, "value": 1}) }}" class="fos_comment_comment_vote{{ fos_comment_vote_up_class | default('') }}">{% trans from 'FOSCommentBundle' %}fos_comment_comment_show_voteup{% endtrans %}</button>
+                        <button data-url="{{ url("fos_comment_new_thread_comment_votes", {"id": comment.thread.id, "commentId": comment.id, "value": -1}) }}" class="fos_comment_comment_vote{{ fos_comment_vote_down_class | default('') }}">{% trans from 'FOSCommentBundle' %}fos_comment_comment_show_votedown{% endtrans %}</button>
                         <div class="fos_comment_comment_score" id="fos_comment_score_{{ comment.id }}">{% include "FOSCommentBundle:Thread:comment_votes.html.twig" with { 'commentScore': comment.score } %}</div>
                     </div>
                 {% endif %}
@@ -69,26 +72,15 @@
     </div>
 
     {% block fos_comment_comment_children %}
-        {% if view is not sameas('flat') %}
-            {% if fos_comment_can_comment(comment) %}
-                <div class="fos_comment_comment_reply">
-                    {% block fos_comment_comment_reply %}
-                        <button data-url="{{ url('fos_comment_new_thread_comments', {"id": comment.thread.id}) }}" data-name="{{ comment.authorName }}" data-parent-id="{{ comment.id }}" class="fos_comment_comment_reply_show_form">{% trans from 'FOSCommentBundle' %}fos_comment_comment_show_reply{% endtrans %}</button>
-                    {% endblock fos_comment_comment_reply %}
-                </div>
-            {% endif %}
-
-            <div class="fos_comment_comment_replies">
-
-
-                {% if children is defined %}
-                    {% include "FOSCommentBundle:Thread:comments.html.twig" with { "comments": children, "depth": depth + 1, "parentId": comment.id, "view": view } %}
-                {% endif %}
-
+        {% if view is not sameas('flat') and fos_comment_can_comment(comment) %}
+            <div class="fos_comment_comment_reply">
+                {% block fos_comment_comment_reply %}
+                    <button data-url="{{ url('fos_comment_new_thread_comments', {"id": comment.thread.id}) }}" data-name="{{ comment.authorName }}" data-parent-id="{{ comment.id }}" class="fos_comment_comment_reply_show_form{{ fos_comment_reply_submit_class | default('') }}">{% trans from 'FOSCommentBundle' %}fos_comment_comment_show_reply{% endtrans %}</button>
+                {% endblock fos_comment_comment_reply %}
             </div>
-        {% elseif view is sameas('flat') and children is defined %}
-            {% include "FOSCommentBundle:Thread:comments.html.twig" with { "comments": children, "depth": depth + 1, "parentId": comment.id, "view": view } %}
         {% endif %}
+
+        {% include "FOSCommentBundle:Thread:comments.html.twig" with { "comments": children | default([]), "depth": depth + 1, "parentId": comment.id, "view": view } %}
     {% endblock fos_comment_comment_children %}
 
 </div>
