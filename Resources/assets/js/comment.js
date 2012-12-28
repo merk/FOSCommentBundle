@@ -107,7 +107,7 @@
                 event.params.url,
                 { parentId: event.params.parentId },
                 function (data) {
-                    $('.fos_comment_comment_form_holder').remove();
+                    $('.fos_comment_comment_form_holder:not(.fos_comment_comment_form_root)').remove();
 
                     comment.addClass('fos_comment_replying');
                     event.params.replacementCallback(data);

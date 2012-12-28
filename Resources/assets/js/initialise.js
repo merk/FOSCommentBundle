@@ -16,7 +16,10 @@
                 thread = new window.fos.Comment(threadDom);
 
             threadDom.data('thread', thread);
-            thread.loadComments();
+
+            if (!threadDom.children.length) {
+                thread.loadComments();
+            }
         });
     });
 

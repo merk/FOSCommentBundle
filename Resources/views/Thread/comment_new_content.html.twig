@@ -17,7 +17,7 @@
 {% endif %}
 
 {% block fos_comment_comment_form_holder %}
-    <div class="fos_comment_comment_form_holder">
+    <div class="fos_comment_comment_form_holder{% if parent is null %} fos_comment_comment_form_root{% endif %}">
         {% block fos_comment_form_title %}
             {% if first %}
                 <h3>{% trans from 'FOSCommentBundle' %}fos_comment_comment_new_headline_first{% endtrans %}</h3>
