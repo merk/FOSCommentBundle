@@ -228,15 +228,20 @@ class ThreadController extends Controller
      */
     public function getThreadCommentAction($id, $commentId)
     {
-        $thread = $this->container->get('fos_comment.manager.thread')->findThreadById($id);
-        $comment = $this->container->get('fos_comment.manager.comment')->findCommentById($commentId);
+        $thread   = $this->container->get('fos_comment.manager.thread')->findThreadById($id);
+        $comment  = $this->container->get('fos_comment.manager.comment')->findCommentById($commentId);
+        $children = $this->container->get('fos_comment.manager.comment')->findCommentTreeByCommentId($commentId);
 
         if (null === $thread || null === $comment || $comment->getThread() !== $thread) {
             throw new NotFoundHttpException(sprintf("No comment with id '%s' found for thread with id '%s'", $commentId, $id));
         }
 
         $view = View::create()
-            ->setData(array('comment' => $comment, 'thread' => $thread))
+            ->setData(array(
+                'children' => $children,
+                'comment'  => $comment,
+                'thread'   => $thread
+            ))
             ->setTemplate(new TemplateReference('FOSCommentBundle', 'Thread', 'comment'));
 
         return $this->getViewHandler()->handle($view);
