@@ -23,7 +23,9 @@
                 }
             };
             var wrappedCompleteCallback = function(response){
-                complete(response.responseText, response.status);
+                if('undefined' !== typeof complete) {
+                    complete(response.responseText, response.status);
+                }
             };
             $.post(url, data, success).error(wrappedErrorCallback).complete(wrappedCompleteCallback);
         },
