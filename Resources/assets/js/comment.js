@@ -30,8 +30,8 @@
          */
         initialiseListeners: function() {
             this.container.on('click', '.fos_comment_comment_reply_show_form', $.proxy(this._handleReplyButton, this));
-            this.container.on('click', '.fos_comment_comment_reply_cancel', $.proxy(this._handleCancelButton, this));
-            this.container.on('submit', '.fos_comment_comment_new_form', $.proxy(this._handleNewSubmit, this));
+            this.container.on('click', '.fos_comment_comment_reply_cancel', $.proxy(this._handleReplyCancelButton, this));
+            this.container.on('submit', '.fos_comment_comment_new_form', $.proxy(this._handleReplySubmit, this));
 
             //this.container.on('submit', '.fos_comment_comment_edit_form', $.proxy(this._handleEditSubmit, this));
             //this.container.on('click', '.fos_comment_comment_edit_show_form', $.proxy(this.showEdit, this));
@@ -62,7 +62,7 @@
          * Handles a new comment form submission. This function is called
          * from an onsubmit event.
          */
-        _handleNewSubmit: function (e) {
+        _handleReplySubmit: function (e) {
             e.preventDefault();
 
             var form             = $(e.target),
@@ -80,6 +80,8 @@
                 function (data) {
                     self._insertComment(data, event.params.commentContainer);
                     self._closeForm(form);
+
+                    $('.fos_comment_replying').removeClass('fos_comment_replying');
                 },
                 function (data, status) {
                     self._formError(data, status, form.parent());
@@ -107,6 +109,7 @@
                 event.params.url,
                 { parentId: event.params.parentId },
                 function (data) {
+                    $('.fos_comment_replying').removeClass('fos_comment_replying');
                     $('.fos_comment_comment_form_holder:not(.fos_comment_comment_form_root)').remove();
 
                     comment.addClass('fos_comment_replying');
@@ -116,11 +119,12 @@
             );
         },
 
-        _handleCancelButton: function (e) {
+        _handleReplyCancelButton: function (e) {
             e.preventDefault();
 
             var button = $(e.target);
 
+            $('.fos_comment_replying').removeClass('fos_comment_replying');
             this._closeForm(button.parents('.fos_comment_comment_new_form'));
         },
 
@@ -146,7 +150,6 @@
          *
          * @param commentHtml
          * @param commentContainer
-         * @param form
          */
         _insertComment: function(commentHtml, commentContainer) {
             var depth = commentContainer.parents('.fos_comment_comment_group').data('depth'),
@@ -171,6 +174,7 @@
          *
          * @param on
          * @param eventName
+         * @param additionalParams
          */
         _trigger: function(on, eventName, additionalParams) {
             var event = $.Event(eventName);
@@ -189,14 +193,15 @@
          * @param form
          */
         _closeForm: function(form) {
-            if (form.is('[data-parent=""]')) {
-                form.reset();
+            var formContainer = form.parent();
+
+            if (formContainer.is('.fos_comment_comment_form_root')) {
+                form[0].reset();
 
                 return;
             }
 
-            // FOSCommentBundle's reply forms are wrapped in a div
-            form.parent().remove();
+            formContainer.remove();
         },
 
         /**
