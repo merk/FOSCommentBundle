@@ -11,5 +11,5 @@
 
 {% set sorter = fos_comment_sorter(sorter | default(null)) %}
 <div id="fos_comment_thread" class="fos_comment_comment_group" data-thread-id="{{ id }}" data-new-position="{{ sorter.newPosition }}" data-base-url="{{ path('fos_comment_get_threads') }}">
-    {% render "FOSCommentBundle:Thread:getThreadComments" with { id: id, permalink: permalink | default(app.request.uri) } %}
+    {% render url('fos_comment_get_thread_comments', { id: id, permalink: permalink | default(app.request.uri) }) %}
 </div>
