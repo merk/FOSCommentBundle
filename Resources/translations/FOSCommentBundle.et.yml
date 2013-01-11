@@ -10,11 +10,7 @@ fos_comment_comment_reply_reply_to:           Vasta %name%
 fos_comment_comment_reply_cancel:             Tühista
 
 fos_comment_comment_show_by:                  Kellelt
-fos_comment_comment_show_voteup:              Hääleta poolt
-fos_comment_comment_show_votedown:            Hääleta vastu
 fos_comment_comment_show_reply:               Vasta
-
-fos_comment_comment_vote_score:               "Skoor: "
 
 fos_comment_comment_tree_load_more:           Näita veel kommentaare
 

@@ -22,7 +22,6 @@ fos_comment:
         manager:
             thread:  fos_comment.manager.thread.acl
             comment: fos_comment.manager.comment.acl
-            vote:    fos_comment.manager.vote.acl
 ```
 
 **Note:**

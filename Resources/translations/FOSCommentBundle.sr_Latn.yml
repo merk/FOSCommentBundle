@@ -10,11 +10,7 @@ fos_comment_comment_reply_reply_to:           Odgovori %name%
 fos_comment_comment_reply_cancel:             Otkaži
 
 fos_comment_comment_show_by:                  Komentar
-fos_comment_comment_show_voteup:              Glasaj za
-fos_comment_comment_show_votedown:            Glasaj protiv
 fos_comment_comment_show_reply:               Odgovori
-
-fos_comment_comment_vote_score:               "Glasova: "
 
 fos_comment_comment_tree_load_more:           Učitaj još odgovora
 

@@ -10,11 +10,7 @@ fos_comment_comment_reply_reply_to:           回复 %name%
 fos_comment_comment_reply_cancel:             取消
 
 fos_comment_comment_show_by:                  署名：
-fos_comment_comment_show_voteup:              顶
-fos_comment_comment_show_votedown:            踩
 fos_comment_comment_show_reply:               回复
-
-fos_comment_comment_vote_score:               分数：
 
 fos_comment_comment_tree_load_more:           加载更多回复
 

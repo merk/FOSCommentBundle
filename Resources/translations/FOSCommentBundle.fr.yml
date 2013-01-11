@@ -10,11 +10,7 @@ fos_comment_comment_reply_reply_to:           Répondre à %name%
 fos_comment_comment_reply_cancel:             Annuler
 
 fos_comment_comment_show_by:                  Par
-fos_comment_comment_show_voteup:              "J'aime"
-fos_comment_comment_show_votedown:            "Je n'aime pas"
 fos_comment_comment_show_reply:               Répondre
-
-fos_comment_comment_tree_load_more:           Afficher plus de réponses
 
 Showing %num% comment|Showing %num% comments: Afficher %num% commentaire|Afficher %num% commentaires
 

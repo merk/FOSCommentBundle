@@ -34,11 +34,6 @@ class CommentExtension extends \Twig_Extension
     protected $commentAcl;
 
     /**
-     * @var \FOS\CommentBundle\Acl\VoteAclInterface|null
-     */
-    protected $voteAcl;
-
-    /**
      * @var \FOS\CommentBundle\Acl\ThreadAclInterface|null
      */
     protected $threadAcl;
@@ -48,12 +43,11 @@ class CommentExtension extends \Twig_Extension
      */
     protected $sortingFactory;
 
-    public function __construct(SortingFactory $sortingFactory, CommentAclInterface $commentAcl = null, VoteAclInterface $voteAcl = null, ThreadAclInterface $threadAcl = null)
+    public function __construct(SortingFactory $sortingFactory, CommentAclInterface $commentAcl = null, ThreadAclInterface $threadAcl = null)
     {
         $this->commentAcl     = $commentAcl;
         $this->sortingFactory = $sortingFactory;
         $this->threadAcl      = $threadAcl;
-        $this->voteAcl        = $voteAcl;
     }
 
     public function getTests()
@@ -61,7 +55,6 @@ class CommentExtension extends \Twig_Extension
         return array(
             'fos_comment_deleted'         => new \Twig_Test_Method($this, 'isCommentDeleted'),
             'fos_comment_in_state'        => new \Twig_Test_Method($this, 'isCommentInState'),
-            'fos_comment_votable'         => new \Twig_Test_Method($this, 'isVotable'),
             'fos_comment_raw'             => new \Twig_Test_Method($this, 'isRawComment'),
         );
     }
@@ -93,17 +86,6 @@ class CommentExtension extends \Twig_Extension
         return $comment->getState() === $state;
     }
 
-    /**
-     * Checks if the comment is an instance of a VotableCommentInterface.
-     *
-     * @param mixed The value to check for VotableCommentInterface
-     * @return bool If $value implements VotableCommentInterface
-     */
-    public function isVotable($value)
-    {
-        return ($value instanceof VotableCommentInterface);
-    }
-
     public function isRawComment($comment)
     {
         return ($comment instanceof RawCommentInterface);
@@ -113,7 +95,6 @@ class CommentExtension extends \Twig_Extension
     {
         return array(
             'fos_comment_can_comment'        => new \Twig_Function_Method($this, 'canComment'),
-            'fos_comment_can_vote'           => new \Twig_Function_Method($this, 'canVote'),
             'fos_comment_can_delete_comment' => new \Twig_Function_Method($this, 'canDeleteComment'),
             'fos_comment_can_edit_comment'   => new \Twig_Function_Method($this, 'canEditComment'),
             'fos_comment_can_edit_thread'    => new \Twig_Function_Method($this, 'canEditThread'),
@@ -183,30 +164,6 @@ class CommentExtension extends \Twig_Extension
         }
 
         return $this->commentAcl->canEdit($comment);
-    }
-
-    /**
-     * Checks if the comment is Votable and that the user has
-     * permission to vote.
-     *
-     * @param  \FOS\CommentBundle\Model\CommentInterface $comment
-     * @return bool
-     */
-    public function canVote(CommentInterface $comment)
-    {
-        if (!$comment instanceof VotableCommentInterface) {
-            return false;
-        }
-
-        if (null === $this->voteAcl) {
-            return true;
-        }
-
-        if (null !== $this->commentAcl && !$this->commentAcl->canView($comment)) {
-            return false;
-        }
-
-        return $this->voteAcl->canCreate();
     }
 
     /**

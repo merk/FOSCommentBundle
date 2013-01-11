@@ -21,8 +21,7 @@ The following steps are optional and the order doesn't matter:
 - [Setting up a parser to allow marked up comments](9-using_a_markup_parser.md)
 - [Other ways of adding comments to a page](10-other_ways_of_adding_comments_to_a_page.md)
 - [Running the test suite](11-running_the_test_suite.md)
-- [Enable voting](12-enable_voting.md)
-- [Hooking into the JS code](13-hooking_into_the_js_code.md)
+- [Hooking into the JS code](12-hooking_into_the_js_code.md)
 
 **Any problem?** Check our [FAQ](99-faq.md).
 

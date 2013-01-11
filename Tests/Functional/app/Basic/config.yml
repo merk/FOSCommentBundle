@@ -7,4 +7,3 @@ fos_comment:
         model:
             comment: FOS\CommentBundle\Tests\Functional\Bundle\CommentBundle\Entity\Comment
             thread: FOS\CommentBundle\Tests\Functional\Bundle\CommentBundle\Entity\Thread
-            vote: FOS\CommentBundle\Tests\Functional\Bundle\CommentBundle\Entity\Vote

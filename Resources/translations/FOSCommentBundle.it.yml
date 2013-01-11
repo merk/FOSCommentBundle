@@ -10,11 +10,7 @@ fos_comment_comment_reply_reply_to:           In risposta a %name%
 fos_comment_comment_reply_cancel:             Annulla
 
 fos_comment_comment_show_by:                  Da
-fos_comment_comment_show_voteup:              Mi piace
-fos_comment_comment_show_votedown:            Non mi piace
 fos_comment_comment_show_reply:               Rispondi
-
-fos_comment_comment_vote_score:               "Punteggio: "
 
 fos_comment_comment_tree_load_more:           Carica altre risposte
 

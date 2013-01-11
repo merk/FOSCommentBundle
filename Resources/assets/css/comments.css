@@ -107,9 +107,6 @@ a.fos_comment_thread_feed {
     display: block;
     float: right;
 }
-.fos_comment_comment_voting {
-    float: right;
-}
 .fos_comment_comment_score {
     display: inline-block;
 }

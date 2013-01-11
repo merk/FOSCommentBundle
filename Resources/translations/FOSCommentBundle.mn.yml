@@ -10,11 +10,7 @@ fos_comment_comment_reply_reply_to:           %name% -д хариу бичих
 fos_comment_comment_reply_cancel:             Цуцлах
 
 fos_comment_comment_show_by:                  ""
-fos_comment_comment_show_voteup:              Нэмэх оноо
-fos_comment_comment_show_votedown:            Хасах оноо
 fos_comment_comment_show_reply:               Хариулах
-
-fos_comment_comment_vote_score:               "Оноо: "
 
 fos_comment_comment_tree_load_more:           Сэтгэгдлийг цааш унших
 

@@ -15,7 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
 use FOS\CommentBundle\Entity\Comment as BaseComment;
 use FOS\CommentBundle\Model\SignedCommentInterface;
 use FOS\CommentBundle\Model\ThreadInterface;
-use FOS\CommentBundle\Model\VotableCommentInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -24,7 +23,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @author Tim Nagel <tim@nagel.com.au>
  */
-class Comment extends BaseComment implements SignedCommentInterface, VotableCommentInterface
+class Comment extends BaseComment implements SignedCommentInterface
 {
     /**
      * @ORM\Id

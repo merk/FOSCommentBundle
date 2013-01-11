@@ -57,19 +57,16 @@ EOT
 
         $threadAcl = $this->getContainer()->get('fos_comment.acl.thread');
         $commentAcl = $this->getContainer()->get('fos_comment.acl.comment');
-        $voteAcl = $this->getContainer()->get('fos_comment.acl.vote');
 
         if ($input->getOption('flush')) {
             $output->writeln('Flushing Global ACEs');
 
             $threadAcl->uninstallFallbackAcl();
             $commentAcl->uninstallFallbackAcl();
-            $voteAcl->uninstallFallbackAcl();
         }
 
         $threadAcl->installFallbackAcl();
         $commentAcl->installFallbackAcl();
-        $voteAcl->installFallbackAcl();
 
         $output->writeln('Global ACEs have been installed.');
     }
