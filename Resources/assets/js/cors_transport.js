@@ -52,6 +52,10 @@
             url += '' != params ? '?' + params : '';
 
             this.request('GET', url, undefined, success, error);
+        },
+
+        patch: function(url, data, success, error) {
+            this.request('PATCH', url, data, success, error);
         }
     };
 

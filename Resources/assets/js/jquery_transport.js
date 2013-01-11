@@ -38,6 +38,21 @@
                 }
             };
             $.get(url, data, success).error(wrappedErrorCallback);
+        },
+
+        patch: function(url, data, success, error) {
+            var wrappedErrorCallback = function(response) {
+                if ('undefined' !== typeof error) {
+                    error(response.responseText, response.status);
+                }
+            };
+            $.ajax({
+                type: 'PATCH',
+                url: url,
+                data: data,
+                success: success,
+                error: error
+            });
         }
     };
 
