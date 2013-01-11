@@ -10,6 +10,12 @@
 !function ($) {
     "use strict";
 
+    /**
+     * Constructor for a new comment thread.
+     *
+     * @param container The DOM element to contain the thread
+     * @param transport The FOSCommentBundle communication transport
+     */
     var Comment = function (container, transport) {
         this.container   = container;
         this.identifier  = container.data('thread-id');
@@ -26,24 +32,22 @@
 
     Comment.prototype = {
         /**
-         * Initialises listeners on the container.
+         * Initialises listeners on the thread container to handle basic events
+         * like pressing the reply button or edit button.
          */
         initialiseListeners: function() {
             this.container.on('click', '.fos_comment_comment_reply_show_form', $.proxy(this._handleReplyButton, this));
             this.container.on('click', '.fos_comment_comment_reply_cancel', $.proxy(this._handleReplyCancelButton, this));
             this.container.on('submit', '.fos_comment_comment_new_form', $.proxy(this._handleReplySubmit, this));
 
-            //this.container.on('submit', '.fos_comment_comment_edit_form', $.proxy(this._handleEditSubmit, this));
-            //this.container.on('click', '.fos_comment_comment_edit_show_form', $.proxy(this.showEdit, this));
-            //this.container.on('click', '.fos_comment_comment_edit_cancel', $.proxy(this.hideEdit, this));
-
-            //this.container.on('click', '.fos_comment_comment_vote', $.proxy(this.vote, this));
-            // this.container.on('click', '.fos_comment_thread_commentable_action', $.proxy(this.lockThread, this)); -- not really what we're after
-
+            this.container.on('click', '.fos_comment_comment_edit_show_form', $.proxy(this._handleEditButton, this));
+            this.container.on('click', '.fos_comment_comment_edit_cancel', $.proxy(this._handleEditCloseButton, this));
+            this.container.on('submit', '.fos_comment_comment_edit_form', $.proxy(this._handleEditSubmit, this));
         },
 
         /**
-         * Load thread comments.
+         * [Re]load thread comments into the dom container. The actual
+         * insertion of the comments into dom container occurs in _insertComments
          */
         loadComments: function () {
             var event = this._trigger(this, 'fos_comment_before_load_thread', {
@@ -119,6 +123,9 @@
             );
         },
 
+        /**
+         * Handles a press on the cancel reply button.
+         */
         _handleReplyCancelButton: function (e) {
             e.preventDefault();
 
@@ -126,6 +133,78 @@
 
             $('.fos_comment_replying').removeClass('fos_comment_replying');
             this._closeForm(button.parents('.fos_comment_comment_new_form'));
+        },
+
+        /**
+         * Handles the submission of a commment edit form.
+         */
+        _handleEditSubmit: function (e) {
+            e.preventDefault();
+
+            var form    = $(e.target),
+                comment = form.parents('.fos_comment_comment_group:first'),
+                event   = this._trigger(form, 'fos_comment_submitting_edit_form', {
+                    action: form.attr('action'),
+                    comment: comment,
+                    data: this._serializeObject(form)
+                });
+
+            var self = this;
+            this.transport.post(
+                event.params.action,
+                event.params.data,
+                function (data) {
+                    $('.fos_comment_editing').removeClass('fos_comment_editing');
+
+                    comment.after(data);
+                    comment.remove();
+                },
+                function (data, status) {
+                    self._formError(data, status, form.parent());
+                }
+            );
+        },
+
+        /**
+         * Deals with a click on the edit button of a comment.
+         */
+        _handleEditButton: function (e) {
+            e.preventDefault();
+
+            var button  = $(e.target),
+                comment = button.parents('[data-depth]:first'),
+                body    = comment.find('.fos_comment_comment_body:first'),
+                event   = this._trigger(comment, 'fos_comment_show_edit', {
+                    url: button.data('url'),
+                    data: {},
+                    replacementCallback: function (data) {
+                        var realBody = body.html();
+                        body.html(data);
+                        body.find('.fos_comment_comment_form_holder').data('replace-with', realBody);
+                    }
+                });
+
+            this.transport.get(
+                event.params.url,
+                event.params.data,
+                function (data) {
+                    comment.addClass('fos_comment_editing');
+                    event.params.replacementCallback(data);
+                },
+                $.proxy(this._raiseError, this)
+            );
+        },
+
+        /**
+         * Deals with a click on a close button on an edit form.
+         */
+        _handleEditCloseButton: function (e) {
+            e.preventDefault();
+
+            var button = $(e.target);
+
+            $('.fos_comment_editing').removeClass('fos_comment_editing');
+            this._closeForm(button.parents('.fos_comment_comment_edit_form'));
         },
 
         /**
@@ -201,6 +280,10 @@
                 return;
             }
 
+            if (formContainer.data('replace-with')) {
+                formContainer.after(formContainer.data('replace-with'));
+            }
+
             formContainer.remove();
         },
 
@@ -219,6 +302,9 @@
 
         /**
          * When a form submission comes back bad, we replace the form itself.
+         *
+         * FOSCommentBundle will always send back a 400 Bad Request error
+         * when form submissions fail.
          *
          * @param responseText
          * @param status
