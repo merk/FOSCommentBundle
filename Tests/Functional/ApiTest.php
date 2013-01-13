@@ -17,6 +17,8 @@ namespace FOS\CommentBundle\Tests\Functional;
  * @author Tim Nagel <tim@nagel.com.au>
  * @group functional
  */
+use Doctrine\Common\Util\Debug;
+
 class ApiTest extends WebTestCase
 {
     protected function setUp()
@@ -182,7 +184,7 @@ class ApiTest extends WebTestCase
         $crawler = $this->client->request('GET', "/comment_api/threads/{$id}/comments.html");
 
         $this->assertCount(2, $crawler->filter('.fos_comment_comment_body'));
-        $this->assertContains('Test Reply Comment', $crawler->filter('.fos_comment_comment_show .fos_comment_comment_depth_1 .fos_comment_comment_body')->first()->text());
+        $this->assertContains('Test Reply Comment', $crawler->filter('.fos_comment_comment_show [data-depth=1] .fos_comment_comment_body')->first()->text());
     }
 
     /**
@@ -215,8 +217,8 @@ class ApiTest extends WebTestCase
         $crawler = $this->client->request('GET', "/comment_api/threads/{$id}/comments.html?view=flat");
 
         $this->assertCount(2, $crawler->filter('.fos_comment_comment_body'));
-        $this->assertContains('Test Comment', $crawler->filter('.fos_comment_comment_show.fos_comment_comment_depth_0 .fos_comment_comment_body')->first()->text());
-        $this->assertContains('Test Reply Comment', $crawler->filter('.fos_comment_comment_show.fos_comment_comment_depth_0 .fos_comment_comment_body')->last()->text());
+        $this->assertContains('Test Comment', $crawler->filter('.fos_comment_comment_show[data-depth=0] .fos_comment_comment_body')->first()->text());
+        $this->assertContains('Test Reply Comment', $crawler->filter('.fos_comment_comment_show[data-depth=0] .fos_comment_comment_body')->last()->text());
     }
 
     /**
@@ -234,17 +236,17 @@ class ApiTest extends WebTestCase
 
         $this->assertCount(2, $crawler->filter('.fos_comment_comment_body'));
         $this->assertCount(2, $crawler2->filter('.fos_comment_comment_body'));
-        $this->assertContains('Test Reply Comment', $crawler->filter('.fos_comment_comment_show.fos_comment_comment_depth_0 .fos_comment_comment_body')->first()->text());
-        $this->assertContains('Test Comment', $crawler->filter('.fos_comment_comment_show.fos_comment_comment_depth_0 .fos_comment_comment_body')->last()->text());
+        $this->assertContains('Test Reply Comment', $crawler->filter('.fos_comment_comment_show[data-depth=0] .fos_comment_comment_body')->first()->text());
+        $this->assertContains('Test Comment', $crawler->filter('.fos_comment_comment_show[data-depth=0] .fos_comment_comment_body')->last()->text());
 
         $this->assertEquals(
-            $crawler->filter('.fos_comment_comment_show.fos_comment_comment_depth_0 .fos_comment_comment_body')->first()->text(),
-            $crawler2->filter('.fos_comment_comment_show.fos_comment_comment_depth_0 .fos_comment_comment_body')->last()->text()
+            $crawler->filter('.fos_comment_comment_show[data-depth=0] .fos_comment_comment_body')->first()->text(),
+            $crawler2->filter('.fos_comment_comment_show[data-depth=0] .fos_comment_comment_body')->last()->text()
         );
 
         $this->assertEquals(
-            $crawler->filter('.fos_comment_comment_show.fos_comment_comment_depth_0 .fos_comment_comment_body')->last()->text(),
-            $crawler2->filter('.fos_comment_comment_show.fos_comment_comment_depth_0 .fos_comment_comment_body')->first()->text()
+            $crawler->filter('.fos_comment_comment_show[data-depth=0] .fos_comment_comment_body')->last()->text(),
+            $crawler2->filter('.fos_comment_comment_show[data-depth=0] .fos_comment_comment_body')->first()->text()
         );
     }
 }
