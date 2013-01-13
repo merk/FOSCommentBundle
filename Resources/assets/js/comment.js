@@ -43,6 +43,8 @@
             this.container.on('click', '.fos_comment_comment_edit_show_form', $.proxy(this._handleEditButton, this));
             this.container.on('click', '.fos_comment_comment_edit_cancel', $.proxy(this._handleEditCloseButton, this));
             this.container.on('submit', '.fos_comment_comment_edit_form', $.proxy(this._handleEditSubmit, this));
+
+            this.container.on('click', '.fos_comment_thread_commentable_action', $.proxy(this._handleThreadCommentableButton, this));
         },
 
         /**
@@ -60,6 +62,27 @@
                 $.proxy(this._insertComments, this),
                 $.proxy(this._raiseError, this)
             );
+        },
+
+        /**
+         * Toggles the commentable state of the thread.
+         */
+        toggleCommentable: function (button) {
+            button = button || this.container.find('fos_comment_thread_commentable_action');
+            var event  = this._trigger(this, 'fos_comment_thread_commentable_toggle', {
+                url: button.data('url'),
+                data: {},
+                toggleCallback: function (data) {
+                    window.location.reload();
+                }
+            });
+
+            this.transport.patch(
+                event.params.url,
+                event.params.data,
+                event.params.toggleCallback,
+                $.proxy(this._raiseError, this)
+            )
         },
 
         /**
@@ -205,6 +228,16 @@
 
             $('.fos_comment_editing').removeClass('fos_comment_editing');
             this._closeForm(button.parents('.fos_comment_comment_edit_form'));
+        },
+
+        /**
+         * Handles the click on the thread commentable button to toggle
+         * the thread's open/closed state.
+         */
+        _handleThreadCommentableButton: function (e) {
+            e.preventDefault();
+
+            this.toggleCommentable($(e.target));
         },
 
         /**

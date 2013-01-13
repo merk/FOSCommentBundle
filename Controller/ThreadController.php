@@ -11,6 +11,7 @@
 
 namespace FOS\CommentBundle\Controller;
 
+use Doctrine\Common\Util\Debug;
 use FOS\CommentBundle\Model\CommentInterface;
 use FOS\CommentBundle\Model\ThreadInterface;
 use FOS\Rest\Util\Codes;
@@ -119,65 +120,19 @@ class ThreadController extends Controller
     }
 
     /**
-     * Get the edit form the open/close a thread.
+     * Toggles the commentability of a thread.
      *
-     * @param Request $request Currenty request
-     * @param mixed   $id      Thread id
-     *
-     * @return View
-     */
-    public function editThreadCommentableAction(Request $request, $id)
-    {
-        $manager = $this->container->get('fos_comment.manager.thread');
-        $thread = $manager->findThreadById($id);
-
-        if (null === $thread) {
-            throw new NotFoundHttpException(sprintf("Thread with id '%s' could not be found.", $id));
-        }
-
-        $thread->setCommentable($this->getRequest()->query->get('value', 1));
-
-        $form = $this->container->get('fos_comment.form_factory.commentable_thread')->createForm();
-        $form->setData($thread);
-
-        $view = View::create()
-            ->setData(array('form' => $form, 'id' => $id, 'isCommentable' => $thread->isCommentable()))
-            ->setTemplate(new TemplateReference('FOSCommentBundle', 'Thread', 'commentable'));
-
-        return $this->getViewHandler()->handle($view);
-    }
-
-    /**
-     * Edits the thread.
-     *
-     * @param Request $request Currenty request
-     * @param mixed   $id      Thread id
+     * @param string $id
      *
      * @return View
      */
-    public function patchThreadCommentableAction(Request $request, $id)
+    public function patchThreadCommentableToggleAction($id)
     {
-        $manager = $this->container->get('fos_comment.manager.thread');
-        $thread = $manager->findThreadById($id);
+        $thread = $this->getThreadById($id);
+        $thread->setCommentable(!$thread->isCommentable());
+        $this->getThreadManager()->saveThread($thread);
 
-        if (null === $thread) {
-            throw new NotFoundHttpException(sprintf("Thread with id '%s' could not be found.", $id));
-        }
-
-        $form = $this->container->get('fos_comment.form_factory.commentable_thread')->createForm();
-        $form->setData($thread);
-
-        if ('PATCH' === $request->getMethod()) {
-            $form->bind($request);
-
-            if ($form->isValid()) {
-                $manager->saveThread($thread);
-
-                return $this->getViewHandler()->handle($this->onOpenThreadSuccess($form));
-            }
-        }
-
-        return $this->getViewHandler()->handle($this->onOpenThreadError($form));
+        return new Response;
     }
 
     /**
